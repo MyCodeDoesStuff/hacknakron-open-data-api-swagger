@@ -1,0 +1,446 @@
+swagger: "2.0"
+info:
+  description: "This is a Swagger UI instance for the HackNAkron Open Data API"
+  version: "1.0.0"
+  title: "HackNAkron Open Data API"
+host: "akron-data-api.herokuapp.com"
+basePath: "/api"
+paths:
+  /:
+    get:
+      tags:
+      - "API"
+      summary: "Get generic data about the API"
+      description: "This API endpoint returns some generic information about the API."
+      operationId: "getAPI"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "object"
+            properties:
+              data:
+                $ref: "#/definitions/API"
+  /land_use_codes:
+    get:
+      tags:
+      - "Land Use Codes"
+      summary: "Get land use codes"
+      description: "This returns land use code information."
+      operationId: "getLandUseCodes"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "filters[use_class][]"
+        in: "query"
+        required: false
+        type: "string"
+        description: "Restricts results to those with a matching use_class - Can be used multiple times with different values to form OR clauses"
+      - name: "filters[use_code][]"
+        in: "query"
+        required: false
+        type: "string"
+        description: "Restricts results to those with a matching use_code - Can be used multiple times with different values to form OR clauses"
+      - name: "page"
+        in: "query"
+        required: false
+        type: "integer"
+        description: "The page you want to request"
+      - name: "per_page"
+        in: "query"
+        required: false
+        type: "integer"
+        description: "Your desired number of results per page"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                items:
+                  $ref: "#/definitions/LandUseCode"
+              meta:
+                $ref: "#/definitions/Meta"
+      security:
+      - opendataapi_auth:
+        - "read:opendatapi"
+  /land_use_codes/{use_code}:
+    get:
+      tags:
+      - "Land Use Codes"
+      summary: "Get specific land use code data"
+      description: "This returns information about a specific land use code."
+      operationId: "getLandUseCodeById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "use_code"
+        in: "path"
+        required: true
+        type: "integer"
+        description: "The use_code of the desired land use code"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "object"
+            properties:
+              data:
+                $ref: "#/definitions/LandUseCode"
+      security:
+      - opendataapi_auth:
+        - "read:opendatapi"
+  /parcels:
+    get:
+      tags:
+      - "Parcels"
+      summary: "Get parcel data"
+      description: "This returns parcel information."
+      operationId: "getParcels"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "filters[object_id][]"
+        in: "query"
+        required: false
+        type: "string"
+        description: "Restricts results to those with a matching object_id - Can be used multiple times with different values to form OR clauses"
+      - name: "filters[tax_year][]"
+        in: "query"
+        required: false
+        type: "string"
+        description: "Restricts results to those with a matching tax_year - Can be used multiple times with different values to form OR clauses"
+      - name: "filters[use_class][]"
+        in: "query"
+        required: false
+        type: "string"
+        description: "Restricts results to those with a matching use_class - Can be used multiple times with different values to form OR clauses"
+      - name: "filters[use_code][]"
+        in: "query"
+        required: false
+        type: "string"
+        description: "Restricts results to those with a matching use_code - Can be used multiple times with different values to form OR clauses"
+      - name: "page"
+        in: "query"
+        required: false
+        type: "integer"
+        description: "The page you want to request"
+      - name: "per_page"
+        in: "query"
+        required: false
+        type: "integer"
+        description: "Your desired number of results per page"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Parcel"
+              meta:
+                $ref: "#/definitions/Meta"
+      security:
+      - opendataapi_auth:
+        - "read:opendatapi"
+  /parcels/{parcel_id}:
+    get:
+      tags:
+      - "Parcels"
+      summary: "Get specific parcel data"
+      description: "This returns information about a specific parcel."
+      operationId: "getParcelById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "parcel_id"
+        in: "path"
+        required: true
+        type: "integer"
+        description: "The parcel_id of the desired parcel"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "object"
+            properties:
+              data:
+                $ref: "#/definitions/Parcel"
+      security:
+      - opendataapi_auth:
+        - "read:opendatapi"
+  /parcels/{parcel_id}/sales:
+    get:
+      tags:
+      - "Parcels"
+      - "Sales"
+      summary: "Get sales data for a specific parcel"
+      description: "This returns sales information about a specific parcel."
+      operationId: "getSaleByParcelId"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "parcel_id"
+        in: "path"
+        required: true
+        type: "integer"
+        description: "The parcel_id of the desired parcel"
+      - name: "page"
+        in: "query"
+        required: false
+        type: "integer"
+        description: "The page you want to request"
+      - name: "per_page"
+        in: "query"
+        required: false
+        type: "integer"
+        description: "Your desired number of results per page"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Sale"
+              meta:
+                $ref: "#/definitions/Meta"
+      security:
+      - opendataapi_auth:
+        - "read:opendatapi"
+  /sales:
+    get:
+      tags:
+      - "Sales"
+      summary: "Get parcel sales data"
+      description: "This returns parcel sales information."
+      operationId: "getSales"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "page"
+        in: "query"
+        required: false
+        type: "integer"
+        description: "The page you want to request"
+      - name: "per_page"
+        in: "query"
+        required: false
+        type: "integer"
+        description: "Your desired number of results per page"
+      responses:
+        200:
+          description: "OK"
+          schema:
+            type: "object"
+            properties:
+              data:
+                type: "array"
+                items:
+                  $ref: "#/definitions/Sale"
+              meta:
+                $ref: "#/definitions/Meta"
+      security:
+      - opendataapi_auth:
+        - "read:opendatapi"
+  /sales/{object_id}:
+    get:
+      tags:
+      - "Sales"
+      summary: "Get specific parsel sales data"
+      description: "This returns sales information about a specific sale."
+      operationId: "getSaleById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "object_id"
+        in: "path"
+        required: true
+        type: "integer"
+        description: "The object_id of the desired sale"
+      responses:
+        200:
+          description: "ok"
+          schema:
+            type: "object"
+            properties:
+              data:
+                $ref: "#/definitions/Sale"
+      security:
+      - opendataapi_auth:
+        - "read:opendatapi"
+        
+securityDefinitions:
+  opendataapi_auth:
+    type: "oauth2"
+    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
+    flow: "implicit"
+    scopes:
+      read:opendatapi: "Read API Data"
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    in: "header"
+definitions:
+  API:
+    type: "object"
+    properties:
+      organization:
+        type: "string"
+      project:
+        type: "object"
+        properties:
+          name:
+            type: "string"
+          repository:
+            type: "string"
+      location:
+        type: "object"
+        properties:
+          address1:
+            type: "string"
+          address2:
+            type: "string"
+          city:
+            type: "string"
+          country:
+            type: "string"
+          state:
+            type: "string"
+          zip_code:
+            type: "integer"
+  Meta:
+    type: "object"
+    properties:
+      count:
+        type: "integer"
+      pages:
+        type: "integer"
+  LandUseCode:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      object_id:
+        type: "integer"
+      use_code:
+        type: "integer"
+      label:
+        type: "string"
+      created_at:
+        type: "string"
+        format: "date-time"
+      updated_at:
+        type: "string"
+        format: "date-time"
+      use_class:
+        type: "string"
+  Sale:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      object_id:
+        type: "integer"
+      parcel_id:
+        type: "integer"
+      sales_date:
+        type: "string"
+        format: "date-time"
+      price:
+        type: "integer"
+      transaction_date:
+        type: "string"
+        format: "date-time"
+      previous_owner:
+        type: "string"
+      new_owner:
+        type: "string"
+      approximate_total:
+        type: "integer"
+      created_at:
+        type: "string"
+        format: "date-time"
+      updated_at:
+        type: "string"
+        format: "date-time"
+      parid:
+        type: "integer"
+  Parcel:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      object_id:
+        type: "integer"
+      parcel_id:
+        type: "integer"
+      tax_year:
+        type: "integer"
+      alternate_id:
+        type: "string"
+      address_number:
+        type: "integer"
+      address_direction:
+        type: "string"
+      address_street:
+        type: "string"
+      address_suffix:
+        type: "string"
+      address_suffix_2:
+        type: "string"
+      address:
+        type: "string"
+      zip_code:
+        type: "integer"
+      acres:
+        type: "string"
+      current_resident_1:
+        type: "string"
+      current_resident_2:
+        type: "string"
+      owner_1:
+        type: "string"
+      owner_2:
+        type: "string"
+      owner_address_1:
+        type: "string"
+      owner_address_2:
+        type: "string"
+      owner_address_3:
+        type: "string"
+      owner_zip_code:
+        type: "integer"
+      owner_zip_code_2:
+        type: "integer"
+      owner_city:
+        type: "string"
+      owner_state:
+        type: "string"
+      description:
+        type: "string"
+      land_use_code_id:
+        type: "integer"
+      created_at:
+        type: "string"
+        format: "date-time"
+      updated_at:
+        type: "string"
+        format: "date-time"
+      city_owned:
+        type: "boolean"
+      use_code:
+        type: "integer"
+      use_class:
+        type: "string"
+externalDocs:
+  description: "Open Data API GitHub"
+  url: "https://github.com/hacknakron/open-data-api"
